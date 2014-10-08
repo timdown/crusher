@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Crusher test</title>
+</head>
+<body>
+<h1>Crusher test</h1>
+Code:<br>
+<textarea rows="12" cols="99" id="source">document.body.appendChild( document.createTextNode('CRUSHED CODE WORKED CRUSH') )</textarea><br>
+<input type="checkbox" id="runCode" checked> Run code after crushing?
+<input type="button" value="Crush" id="crush"><br>
+Crushed:<br>
+<textarea rows="12" cols="99" id="crushed"></textarea>
+<div id="info"></div>
+<script src="crusher.js"></script>
+<script>
+    function gEBI(id) {
+        return document.getElementById(id);
+    }
+    
+    function toPercentage(num) {
+        return Math.round(num * 100) + "%";
+    }
+
+    gEBI("crush").onclick = function() {
+        var code = gEBI("source").value;
+
+        var crushed = crusher.crush(code, {
+            //declareVariables: true
+        });
+        gEBI("crushed").value = crushed;
+        
+        var codeBytes = crusher.byteCount(code);
+        var crushedBytes = crusher.byteCount(crushed);
+        
+        gEBI("info").innerHTML = code.length + " characters (" + codeBytes +
+            "B) to " + crushed.length + " characters (" + crushedBytes + "B). Ratio: " +
+            toPercentage(crushed.length / code.length) + " (" + toPercentage(crushedBytes / codeBytes) + " in bytes)";
+
+        if (gEBI("runCode").checked) {
+            window.setTimeout(function() {
+                eval(/*'"use strict";' + */crushed)
+            }, 1);
+        }
+    }
+</script>
+</body>
+</html>
